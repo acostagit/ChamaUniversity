@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Chama.Core.DomainObjects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Chama.Inscricao.API.Models
 {
-    public class Inscricao
+    public class Inscricao : Entity, IAggregateRoot
     {
-        public Guid Id { get; set; }
         public int Numero { get; set; }
         public DateTime DataInscricao { get; set; }
         public int Quantidade { get; set; }

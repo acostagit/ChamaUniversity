@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace Chama.Core.DomainObjects
-{
-    //TODO
-    public class Email
+{   public class Email
     {
         public string Endereco { get; set; }
 
-        //EF 
+        //para EF 
         protected Email() { }
         public Email(string endereco)
         {
@@ -18,11 +16,9 @@ namespace Chama.Core.DomainObjects
 
         public static bool Validar(string email)
         {
-            //TODO
+            if (email.Length == 0) return false;
 
             return true;
         }
-
-
     }
 }

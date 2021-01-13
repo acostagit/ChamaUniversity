@@ -1,45 +1,66 @@
-﻿using Chama.Identidade.API.Models;
+﻿using Chama.WebApp.MVC.Extensions;
+using Chama.WebApp.MVC.Models;
+using Microsoft.Extensions.Options;
 using System;
 using System.Net.Http;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Chama.WebApp.MVC.Services
 {
-    public class AutenticacaoService : IAutenticacaoService
+    public class AutenticacaoService : Service, IAutenticacaoService
     {
-        private readonly HttpClient _httpCliente;
-        public AutenticacaoService(HttpClient httpClient)
+        private readonly HttpClient _httpClient;
+        //private readonly AppSettings _settings;
+
+        public AutenticacaoService(HttpClient httpClient, IOptions<AppSettings> settings)
         {
-            _httpCliente = httpClient;
+            httpClient.BaseAddress = new Uri(settings.Value.AutenticaURL);
+
+            _httpClient = httpClient;
+            //_settings = settings.Value;
         }
-        public async Task<string> Login(UsuarioLogin usuarioLogin)
+        
+        public async Task<UsuarioRespostaLogin> Login(UsuarioLogin usuarioLogin)
         {
-            var url = "https://localhost:44309/api/identidade/autenticar";
-            var loginContent = new StringContent(
-                JsonSerializer.Serialize(usuarioLogin),
-                Encoding.UTF8,
-                "application/json"
-            );
+            //var url = "https://localhost:44309/api/identidade/autenticar"; outra forma de fazer
 
-            var response = await _httpCliente.PostAsync(url, loginContent);
+            var loginContent = ObterConteudo(usuarioLogin);
 
-            return JsonSerializer.Deserialize<string>(await response.Content.ReadAsStringAsync());
+            var response = await _httpClient.PostAsync("/api/identidade/autenticar", loginContent);
+            //tbm pode ser eito desse jeito
+            //var response = await _httpClient.PostAsync($"{_settings.AutenticaURL}/api/identidade/autenticar", loginContent);
+
+            if (!TratarErrosResponse(response))
+            {
+                return new UsuarioRespostaLogin
+                {
+                    ResponseResult = await DeserializarObjetoResponse<ResponseResult>(response)
+                };
+            };
+
+            return JsonSerializer.Deserialize<UsuarioRespostaLogin>(await response.Content.ReadAsStringAsync());
         }
 
-        public async Task<string> Registro(UsuarioRegistro usuarioRegistro)
+        public async Task<UsuarioRespostaLogin> Registro(UsuarioRegistro usuarioRegistro)
         {
-            var url = "https://localhost:44309/api/identidade/nova-conta";
-            var registroContent = new StringContent(
-                JsonSerializer.Serialize(usuarioRegistro),
-                Encoding.UTF8,
-                "application/json"
-            );
+            //var url = "https://localhost:44309/api/identidade/nova-conta"; forma de fazer
 
-            var response = await _httpCliente.PostAsync(url, registroContent);
+            var registroContent = ObterConteudo(usuarioRegistro);
 
-            return JsonSerializer.Deserialize<string>(await response.Content.ReadAsStringAsync());
+            var response = await _httpClient.PostAsync("/api/identidade/nova-conta", registroContent);
+            //pode ser feito desse jeito
+            //var response = await _httpClient.PostAsync($"{_settings.AutenticaURL}/api/identidade/nova-conta", registroContent);
+
+            if (!TratarErrosResponse(response))
+            {
+                return new UsuarioRespostaLogin
+                {
+                    ResponseResult = await DeserializarObjetoResponse<ResponseResult>(response)
+                };
+            };
+
+            return await DeserializarObjetoResponse<UsuarioRespostaLogin>(response);
         }
     }
 }
