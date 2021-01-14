@@ -10,8 +10,11 @@ namespace Chama.Aluno.API.Application.Commands
         public void Manipular(RegistrarAlunoCommand message)
         {
             //Validar
+            if(message != null)
+            {
+                //Persistir na base
 
-            //Persistir na base
+            }
         }
     }
 }

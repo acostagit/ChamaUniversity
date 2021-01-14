@@ -46,13 +46,22 @@ namespace Chama.WebApp.MVC.Controllers
 
             var resposta = await _autenticacaoService.Login(usuarioLogin);
 
-            ////if (ResponsePossuiErros(resposta.ResponseResult)) return View(usuarioLogin);
+            if (ResponsePossuiErros(resposta.ResponseResult)) return View(usuarioLogin);
 
-            ////await RealizarLogin(resposta);
+            await RealizarLogin(resposta);
 
             if (string.IsNullOrEmpty(returnUrl)) return RedirectToAction("Index", "Home");
 
             return LocalRedirect(returnUrl);
+        }
+
+        private bool ResponsePossuiErros(ResponseResult responseResult)
+        {
+            if (responseResult.Title.Length == 0) return false;
+            
+            if (responseResult.Status == 0) return false;
+
+            return true;
         }
 
         [HttpGet]
@@ -72,9 +81,9 @@ namespace Chama.WebApp.MVC.Controllers
 
             var resposta = await _autenticacaoService.Registro(usuarioRegistro);
 
-            ////if (ResponsePossuiErros(resposta.ResponseResult)) return View(usuarioRegistro);
+            if (ResponsePossuiErros(resposta.ResponseResult)) return View(usuarioRegistro);
 
-            ////await RealizarLogin(resposta);
+            await RealizarLogin(resposta);
 
             return RedirectToAction("Index", "Home");
         }

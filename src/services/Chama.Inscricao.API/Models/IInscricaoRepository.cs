@@ -12,5 +12,6 @@ namespace Chama.Inscricao.API.Models
         Task<Inscricao> ObterPorId(Guid id);
         void Adicionar(Inscricao inscricao);
         void Atualizar(Inscricao inscricao);
+        void Deletar(Inscricao inscricao);
     }
 }

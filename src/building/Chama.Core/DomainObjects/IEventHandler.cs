@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Chama.Core.Messages;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Chama.Core.Messages
+namespace Chama.Core.DomainObjects
 {
-    public interface Event
+    public interface IEventHandler
     {
         Task PublicarEvent<T>(T evento) where T : Event;
 

@@ -12,5 +12,7 @@ namespace Chama.Professor.API.Models
         Task<Professor> ObterPorId(Guid id);
         void Adicionar(Professor professor);
         void Atualizar(Professor professor);
+        void Deletar(Professor professor);
+
     }
 }

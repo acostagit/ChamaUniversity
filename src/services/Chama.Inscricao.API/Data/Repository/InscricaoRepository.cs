@@ -1,4 +1,5 @@
 ﻿using Chama.Inscricao.API.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,24 +9,39 @@ namespace Chama.Inscricao.API.Data.Repository
 {
     public class InscricaoRepository : IInscricaoRepository
     {
-        public Task<Models.Inscricao> ObterPorId(Guid id)
+        private readonly InscricaoContext _context;
+
+        public InscricaoRepository(InscricaoContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
         }
 
-        public Task<IEnumerable<Models.Inscricao>> ObterTodos()
+
+        public async Task<Models.Inscricao> ObterPorId(Guid id)
         {
-            throw new NotImplementedException();
+            return await _context.Inscricoes.FindAsync(id);
+        }
+
+        public async Task<IEnumerable<Models.Inscricao>> ObterTodos()
+        {
+
+            var inscricoes = _context.Inscricoes.AsNoTracking().ToListAsync();
+
+            return await inscricoes;
         }
 
         public void Adicionar(Models.Inscricao inscricao)
         {
-            throw new NotImplementedException();
+            _context.Inscricoes.Add(inscricao);
         }
 
         public void Atualizar(Models.Inscricao inscricao)
         {
-            throw new NotImplementedException();
+            _context.Inscricoes.Update(inscricao);
+        }
+        public void Deletar(Models.Inscricao inscricao)
+        {
+            _context.Inscricoes.Remove(inscricao);
         }
 
         public void Dispose()

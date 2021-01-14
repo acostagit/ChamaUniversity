@@ -10,8 +10,9 @@ namespace Chama.Aluno.API.Models
     {
         Task<IEnumerable<Aluno>> ObterTodos();
         Task<Aluno> ObterPorId(Guid id);
-        void Adicionar(Aluno curso);
-        void Atualizar(Aluno curso);
+        void Adicionar(Aluno aluno);
+        void Atualizar(Aluno aluno);
+        void Deletar(Aluno aluno);
     }
 }
 

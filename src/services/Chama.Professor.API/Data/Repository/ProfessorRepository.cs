@@ -1,4 +1,5 @@
 ﻿using Chama.Professor.API.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,33 +9,38 @@ namespace Chama.Professor.API.Data.Repository
 {
     public class ProfessorRepository : IProfessorRepository
     {
-        private readonly ProfessorContext _professorContext;
+        private readonly ProfessorContext _context;
 
         public ProfessorRepository(ProfessorContext professorContext)
         {
-            _professorContext = professorContext;
-        }
-        public void Adicionar(Models.Professor curso)
-        {
-            throw new NotImplementedException();
+            _context = professorContext;
         }
 
-        public void Atualizar(Models.Professor curso)
+        public async Task<Models.Professor> ObterPorId(Guid id)
         {
-            throw new NotImplementedException();
+            return await _context.Professores.FindAsync(id);
         }
 
+        public async Task<IEnumerable<Models.Professor>> ObterTodos()
+        {
+            return await _context.Professores.AsNoTracking().ToListAsync();
+        }
+
+        public void Adicionar(Models.Professor professor)
+        {
+            _context.Professores.Add(professor);
+        }
+
+        public void Atualizar(Models.Professor professor)
+        {
+            _context.Professores.Update(professor);
+        }
+      
+        public void Deletar(Models.Professor professor)
+        {
+            _context.Professores.Remove(professor);
+        }
         public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Models.Professor> ObterPorId(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<Models.Professor>> ObterTodos()
         {
             throw new NotImplementedException();
         }

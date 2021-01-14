@@ -1,5 +1,6 @@
 ﻿using Chama.Aluno.API.Models;
 using Chama.Core.Data;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,29 +19,37 @@ namespace Chama.Aluno.API.Data.Repository
 
         //public IUnitOfWork UnitOfWwork => _context;
 
-        public Task<Models.Aluno> ObterPorId(Guid id)
+        public async Task<Models.Aluno> ObterPorId(Guid id)
         {
-            throw new NotImplementedException();
+            return await _context.Alunos.FindAsync(id);
         }
 
-        public Task<IEnumerable<Models.Aluno>> ObterTodos()
+        public async Task<IEnumerable<Models.Aluno>> ObterTodos()
         {
-            throw new NotImplementedException();
+            var alunos = _context.Alunos.AsNoTracking().ToListAsync();
+
+            return await alunos;
         }
 
-        public void Adicionar(Models.Aluno curso)
+        public void Adicionar(Models.Aluno aluno)
         {
-            throw new NotImplementedException();
+            _context.Alunos.Add(aluno);
         }
 
-        public void Atualizar(Models.Aluno curso)
+        public void Atualizar(Models.Aluno aluno)
         {
-            throw new NotImplementedException();
+            _context.Alunos.Update(aluno);
+        }
+
+        public void Deletar(Models.Aluno aluno)
+        {
+            _context.Alunos.Remove(aluno);
         }
 
         public void Dispose()
         {
             throw new NotImplementedException();
         }
+
     }
 }
